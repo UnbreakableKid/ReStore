@@ -14,6 +14,8 @@ builder.Services.AddDbContext<StoreContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,7 +26,11 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCors(opt => opt.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:5976"));
 
 app.UseAuthorization();
 
@@ -40,7 +46,6 @@ try
 {
     context.Database.Migrate();
     DbInitializer.Initialize(context);
-    System.Console.WriteLine("Database migrated");
 }
 catch (Exception ex)
 {
