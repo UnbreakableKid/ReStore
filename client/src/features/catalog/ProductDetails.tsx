@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
-  chakra,
   Container,
   Stack,
   Text,
@@ -13,17 +12,12 @@ import {
   SimpleGrid,
   StackDivider,
   useColorModeValue,
-  VisuallyHidden,
-  List,
-  ListItem,
-  useColorMode,
 } from "@chakra-ui/react";
-import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
 import { useParams } from "react-router";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Product } from "../../app/models/product";
+import agent from "../../api/agent";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -31,9 +25,8 @@ export default function ProductDetails() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5034/api/products/" + id)
-      .then((response) => setProduct(response.data))
+    agent.Catalog.details(parseInt(id!))
+      .then((response) => setProduct(response))
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
   }, [id]);
