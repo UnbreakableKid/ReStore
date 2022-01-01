@@ -5,15 +5,37 @@ import App from "./app/layout/App";
 import reportWebVitals from "./reportWebVitals";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import theme from "./app/layout/theme";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
+
+const CustomRouter = ({ basename, children, history }: any) => {
+  const [state, setState] = React.useState({
+    action: history.action,
+    location: history.location,
+  });
+
+  React.useLayoutEffect(() => history.listen(setState), [history]);
+
+  return (
+    <Router
+      basename={basename}
+      children={children}
+      location={state.location}
+      navigationType={state.action}
+      navigator={history}
+    />
+  );
+};
+
+export const history = createBrowserHistory();
 
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider resetCSS theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-      <BrowserRouter>
+      <CustomRouter history={history}>
         <App />
-      </BrowserRouter>
+      </CustomRouter>
     </ChakraProvider>
   </React.StrictMode>,
   document.getElementById("root")
