@@ -12,8 +12,8 @@ const config: ThemeConfig = {
 // 3. extend the theme
 const theme = extendTheme({
   fonts: {
-    body: "system-ui, sans-serif",
-    heading: "system-ui, sans-serif",
+    body: "Roboto, sans-serif",
+    heading: "Roboto, sans-serif",
     mono: "Menlo, monospace",
   },
   config,
