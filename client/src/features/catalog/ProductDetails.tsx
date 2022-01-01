@@ -18,6 +18,7 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { Product } from "../../app/models/product";
 import agent from "../../api/agent";
+import NotFound from "../../app/errors/NotFound";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -33,7 +34,7 @@ export default function ProductDetails() {
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (!product) return <div>Product not found</div>;
+  if (!product) return <NotFound />;
 
   return (
     <Container maxW={"7xl"}>
@@ -47,7 +48,7 @@ export default function ProductDetails() {
             rounded={"md"}
             alt={"product image"}
             src={product.pictureURL}
-            fit={"cover"}
+            fit={"contain"}
             align={"center"}
             w={"100%"}
             h={{ base: "100%", sm: "400px", lg: "500px" }}
