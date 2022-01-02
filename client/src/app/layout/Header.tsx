@@ -53,31 +53,12 @@ export default function Header() {
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <IconButton
-            size={"md"}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={"Open Menu"}
-            display={{ md: "none" }}
-            onClick={isOpen ? onClose : onOpen}
-          />
-          <HStack
-            spacing={"45em"}
-            alignItems={"center"}
-            justifyContent={"stretch"}
-          >
-            <Box>Insert Logo</Box>
-            <Center>
-              <HStack
-                as={"nav"}
-                spacing={4}
-                display={{ base: "none", md: "flex" }}
-              >
-                {Links.map((link) => (
-                  <NavLink key={link}>{link}</NavLink>
-                ))}
-              </HStack>
-            </Center>
+        <HStack h={16} alignItems={"center"} justifyContent={"space-between"}>
+          <Box>Insert Logo</Box>
+          <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
+            {Links.map((link) => (
+              <NavLink key={link}>{link}</NavLink>
+            ))}
           </HStack>
           <Flex alignItems={"center"}>
             <HStack as={"nav"} display={{ base: "none", md: "flex" }}>
@@ -116,7 +97,7 @@ export default function Header() {
               </Menu>
             </HStack>
           </Flex>
-        </Flex>
+        </HStack>
       </Box>
     </>
   );

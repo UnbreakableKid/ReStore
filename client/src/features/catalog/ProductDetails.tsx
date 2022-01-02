@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { Product } from "../../app/models/product";
 import agent from "../../api/agent";
 import NotFound from "../../app/errors/NotFound";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -32,7 +33,7 @@ export default function ProductDetails() {
       .finally(() => setIsLoading(false));
   }, [id]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingComponent message="Loading Product..." />;
 
   if (!product) return <NotFound />;
 

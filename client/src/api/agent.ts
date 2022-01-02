@@ -2,9 +2,13 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { history } from "..";
 
 axios.defaults.baseURL = "http://localhost:5034/api/";
+const responseBody = (response: AxiosResponse) => response.data;
 
+//delay request for testing purposes only
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 axios.interceptors.response.use(
-  (response) => {
+  async (response) => {
+    await sleep();
     return response;
   },
   (error: AxiosError) => {
@@ -43,8 +47,6 @@ axios.interceptors.response.use(
     return Promise.reject(error.response);
   }
 );
-
-const responseBody = (response: AxiosResponse) => response.data;
 
 const requests = {
   get: (url: string) => axios.get(url).then(responseBody),
