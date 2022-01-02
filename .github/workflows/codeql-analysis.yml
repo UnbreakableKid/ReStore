@@ -62,9 +62,13 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    - run: |
-       make bootstrap
-       make release
+    - if: matrix.language == 'javascript
+      name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+      
+    - if: matrix.language == 'csharp' 
+      name: Autobuild
+      run: dotnet build
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
