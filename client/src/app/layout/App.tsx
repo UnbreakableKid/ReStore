@@ -8,6 +8,7 @@ import ContactPage from "../../features/contact/ContactPage";
 import ProductDetails from "../../features/catalog/ProductDetails";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
+import BasketPage from "../../features/basket/BasketPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/about" component={AboutPage} />
         <Route path="/contact" component={ContactPage} />
         <Route path="/server-error" component={ServerError} />
+        <Route path="/basket" component={BasketPage} />
         <Route component={NotFound} />
       </Switch>
     </>

@@ -11,8 +11,11 @@ import {
   HStack,
   Text,
   Link,
+  IconButton,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { FiEye, FiShoppingCart } from "react-icons/fi";
+import agent from "../../api/agent";
 import { Product } from "../../app/models/product";
 
 interface Props {
@@ -20,6 +23,15 @@ interface Props {
 }
 
 function ProductCard({ product }: Props) {
+  const [loading, setLoading] = useState(false);
+
+  function handleAddItem(productId: number) {
+    setLoading(true);
+    agent.Basket.addItem(productId)
+      .catch((error) => console.log("error", error))
+      .finally(() => setLoading(false));
+  }
+
   return (
     <GridItem p={50} w="100%">
       <Box
@@ -57,18 +69,24 @@ function ProductCard({ product }: Props) {
               color={"gray.800"}
               fontSize={"1.2em"}
             >
-              <chakra.a href={"#"} display={"flex"}>
-                <Icon as={FiShoppingCart} h={7} w={7} alignSelf={"center"} />
-              </chakra.a>
+              <IconButton
+                icon={<FiShoppingCart />}
+                onClick={() => handleAddItem(product.id)}
+                display={"flex"}
+                aria-label="Add to cart"
+                isLoading={loading}
+                variant={"ghost"}
+              />
             </Tooltip>
           </Flex>
 
-          <HStack alignContent="center" spacing={4}>
+          <HStack
+            alignContent="center"
+            spacing={4}
+            justifyContent={"space-between"}
+          >
             <Box fontSize="2xl" color={useColorModeValue("gray.800", "white")}>
-              <Box as="span" color={"gray.600"} fontSize="lg">
-                £
-              </Box>
-              <Text as="span"> {product.price.toFixed(2)}</Text>
+              £<Text as="span"> {product.price.toFixed(2)}</Text>
             </Box>
             <Tooltip
               label="View product"

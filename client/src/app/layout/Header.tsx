@@ -4,27 +4,15 @@ import {
   Avatar,
   HStack,
   Link,
-  IconButton,
   useDisclosure,
   useColorModeValue,
   AvatarBadge,
-  Button,
   useColorMode,
-  Center,
-  Stack,
-  Spacer,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  CloseIcon,
-  StarIcon,
-  MoonIcon,
-  SunIcon,
-} from "@chakra-ui/icons";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 
 const Links = ["Home", "Catalog", "About", "Contact"];
@@ -47,7 +35,6 @@ const NavLink = ({ children }: { children: string }) => (
 );
 
 export default function Header() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -74,6 +61,7 @@ export default function Header() {
                         style={{ color: useColorModeValue("black", "white") }}
                       />
                     }
+                    
                     showBorder={false}
                     size={"md"}
                   >
@@ -88,7 +76,7 @@ export default function Header() {
                 </MenuButton>
                 <MenuList>
                   <MenuItem>
-                    <Link to="/profile">Profile</Link>
+                    <Link href="/basket">Basket</Link>
                   </MenuItem>
                   <MenuItem onClick={toggleColorMode}>
                     Toggle {colorMode === "light" ? "Dark" : "Light"} Theme
