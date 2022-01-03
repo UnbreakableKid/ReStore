@@ -27,43 +27,42 @@ import agent from "../../api/agent";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { setBasket, removeItem } from "../basket/basketSlice";
+import {
+  addBasketItemAsync,
+  removeBaskeItemAsync,
+} from "../basket/basketSlice";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
 
-  const { basket } = useAppSelector((state) => state.basket);
+  const { basket, status } = useAppSelector((state) => state.basket);
 
   const dispatch = useAppDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
 
   const [quantity, setQuantity] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
 
   const item = basket?.items.find((i) => i.productId === product?.id);
 
   function handleUpdateCart() {
-    setSubmitting(true);
     if (!item || quantity > item.quantity) {
       const updatedQuantity = item ? quantity - item.quantity : quantity;
-      agent.Basket.addItem(product?.id!, updatedQuantity)
-        .then((basket) => {
-          dispatch(setBasket(basket));
+      dispatch(
+        addBasketItemAsync({
+          productId: product?.id!,
+          quantity: updatedQuantity,
         })
-        .catch((error) => console.log("error", error))
-        .finally(() => setSubmitting(false));
+      );
     } else {
       const updatedQuantity = item.quantity - quantity;
-      agent.Basket.removeItem(product!.id, updatedQuantity) 
-        .then(() =>
-          dispatch(
-            removeItem({ productId: product!.id, quantity: updatedQuantity })
-          )
-        )
-        .catch((error) => console.log("error", error))
-        .finally(() => setSubmitting(false));
+      dispatch(
+        removeBaskeItemAsync({
+          productId: product?.id!,
+          quantity: updatedQuantity,
+        })
+      );
     }
   }
 
@@ -198,7 +197,7 @@ export default function ProductDetails() {
                 transform: "translateY(2px)",
                 boxShadow: "lg",
               }}
-              isLoading={submitting}
+              isLoading={status.includes("pending")}
               onClick={handleUpdateCart}
             >
               {item ? "Update cart" : "Add to cart"}

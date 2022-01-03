@@ -16,36 +16,14 @@ import {
   Tr,
   Button,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import agent from "../../api/agent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { removeItem, setBasket } from "./basketSlice";
+import { addBasketItemAsync, removeBaskeItemAsync } from "./basketSlice";
 import BasketSummary from "./BasketSummary";
 
 export default function BasketPage() {
-  const { basket } = useAppSelector((state) => state.basket);
+  const { basket, status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
-  const [status, setStatus] = useState({
-    loading: false,
-    name: "",
-  });
-
-  function handleAddItem(productId: number, name: string) {
-    setStatus({ loading: true, name });
-    agent.Basket.addItem(productId)
-      .then((basket) => dispatch(setBasket(basket)))
-      .catch((error) => console.log("error", error))
-      .finally(() => setStatus({ loading: false, name: "" }));
-  }
-
-  function handleRemoveItem(productId: number, quantity = 1, name: string) {
-    setStatus({ loading: true, name });
-    agent.Basket.removeItem(productId, quantity)
-      .then(() => dispatch(removeItem({ productId, quantity })))
-      .catch((error) => console.log("error", error))
-      .finally(() => setStatus({ loading: false, name: "" }));
-  }
 
   if (!basket) return <Heading as="h3">No basket</Heading>;
 
@@ -85,12 +63,14 @@ export default function BasketPage() {
                       aria-label="Add item"
                       icon={<PlusSquareIcon color={"red.500"} />}
                       variant="ghost"
-                      isLoading={
-                        status.loading &&
-                        status.name === "add " + item.productId
-                      }
+                      isLoading={status === "pendingAddItem" + item.productId}
                       onClick={() =>
-                        handleAddItem(item.productId, "add " + item.productId)
+                        dispatch(
+                          addBasketItemAsync({
+                            productId: item.productId,
+                            quantity: 1,
+                          })
+                        )
                       }
                     />
                     {item.quantity}
@@ -99,14 +79,15 @@ export default function BasketPage() {
                       icon={<MinusIcon color={"red.500"} />}
                       variant="ghost"
                       isLoading={
-                        status.loading &&
-                        status.name === "rem " + item.productId
+                        status === "pendingRemoveItem" + item.productId + "rem"
                       }
                       onClick={() =>
-                        handleRemoveItem(
-                          item.productId,
-                          1,
-                          "rem " + item.productId
+                        dispatch(
+                          removeBaskeItemAsync({
+                            productId: item.productId,
+                            quantity: 1,
+                            name: "rem",
+                          })
                         )
                       }
                     />
@@ -119,13 +100,15 @@ export default function BasketPage() {
                     icon={<DeleteIcon color={"red.500"} />}
                     variant="ghost"
                     isLoading={
-                      status.loading && status.name === "del" + item.productId
+                      status === "pendingRemoveItem" + item.productId + "delete"
                     }
                     onClick={() =>
-                      handleRemoveItem(
-                        item.productId,
-                        item.quantity,
-                        "del" + item.productId
+                      dispatch(
+                        removeBaskeItemAsync({
+                          productId: item.productId,
+                          quantity: item.quantity,
+                          name: "delete",
+                        })
                       )
                     }
                   />

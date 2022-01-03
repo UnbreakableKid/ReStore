@@ -12,29 +12,18 @@ import {
   IconButton,
   Link,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { FiEye, FiShoppingCart } from "react-icons/fi";
-import agent from "../../api/agent";
 import { Product } from "../../app/models/product";
-import { useAppDispatch } from "../../app/store/configureStore";
-import { setBasket } from "../basket/basketSlice";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { addBasketItemAsync } from "../basket/basketSlice";
 
 interface Props {
   product: Product;
 }
 
 function ProductCard({ product }: Props) {
-  const [loading, setLoading] = useState(false);
-
+  const { status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
-
-  function handleAddItem(productId: number) {
-    setLoading(true);
-    agent.Basket.addItem(productId)
-      .then((basket) => dispatch(setBasket(basket)))
-      .catch((error) => console.log("error", error))
-      .finally(() => setLoading(false));
-  }
 
   return (
     <GridItem p={50} w="100%">
@@ -63,6 +52,7 @@ function ProductCard({ product }: Props) {
               as="h4"
               lineHeight="tight"
               isTruncated
+              wordBreak={["break-word"]}
             >
               {product.name}
             </Box>
@@ -75,10 +65,12 @@ function ProductCard({ product }: Props) {
             >
               <IconButton
                 icon={<FiShoppingCart />}
-                onClick={() => handleAddItem(product.id)}
+                onClick={() =>
+                  dispatch(addBasketItemAsync({ productId: product.id, quantity: 1 }))
+                }
                 display={"flex"}
                 aria-label="Add to cart"
-                isLoading={loading}
+                isLoading={status.includes("pendingAddItem" + product.id)}
                 variant={"ghost"}
               />
             </Tooltip>

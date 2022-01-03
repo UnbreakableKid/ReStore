@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { useStoreContext } from "../context/StoreContext";
 import { useAppSelector } from "../store/configureStore";
 
 const Links = ["Home", "Catalog", "About", "Contact"];

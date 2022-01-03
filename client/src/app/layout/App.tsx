@@ -9,7 +9,6 @@ import ProductDetails from "../../features/catalog/ProductDetails";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
 import BasketPage from "../../features/basket/BasketPage";
-import { useStoreContext } from "../context/StoreContext";
 import { useEffect, useState } from "react";
 import { getCookie } from "../util/util";
 import agent from "../../api/agent";
