@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import {
   Box,
   Container,
@@ -22,8 +21,6 @@ import {
 import { MdLocalShipping } from "react-icons/md";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import { Product } from "../../app/models/product";
-import agent from "../../api/agent";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
@@ -31,20 +28,38 @@ import {
   addBasketItemAsync,
   removeBaskeItemAsync,
 } from "../basket/basketSlice";
+import { fetchProductAsync, productSelectors } from "./catalogSlice";
 
 export default function ProductDetails() {
-  const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
-
   const { basket, status } = useAppSelector((state) => state.basket);
-
   const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const product = useAppSelector((state) =>
+    productSelectors.selectById(state, id)
+  );
+
+  const { status: productStatus } = useAppSelector((state) => state.catalog);
 
   const [quantity, setQuantity] = useState(0);
 
   const item = basket?.items.find((i) => i.productId === product?.id);
+
+  const boldYellow = useColorModeValue("yellow.500", "yellow.300");
+
+  const buttonColors = {
+    bg: useColorModeValue("gray.900", "gray.50"),
+    color: useColorModeValue("white", "gray.900"),
+  };
+
+  const textColor = useColorModeValue("gray.500", "gray.400");
+
+  const dividerColor = useColorModeValue("gray.200", "gray.600");
+
+  useEffect(() => {
+    if (item) setQuantity(item.quantity);
+    if (!product) dispatch(fetchProductAsync(parseInt(id)));
+  }, [id, item, dispatch, product]);
 
   function handleUpdateCart() {
     if (!item || quantity > item.quantity) {
@@ -66,16 +81,8 @@ export default function ProductDetails() {
     }
   }
 
-  useEffect(() => {
-    if (item) setQuantity(item.quantity);
-
-    agent.Catalog.details(parseInt(id!))
-      .then((response) => setProduct(response))
-      .catch((error) => console.log(error))
-      .finally(() => setIsLoading(false));
-  }, [id, item]);
-
-  if (isLoading) return <LoadingComponent message="Loading Product..." />;
+  if (productStatus.includes("pending"))
+    return <LoadingComponent message="Loading Product..." />;
 
   if (!product) return <NotFound />;
 
@@ -106,11 +113,7 @@ export default function ProductDetails() {
             >
               {product.name}
             </Heading>
-            <Text
-              color={useColorModeValue("red", "red")}
-              fontWeight={400}
-              fontSize={"2xl"}
-            >
+            <Text color={"red"} fontWeight={400} fontSize={"2xl"}>
               {product.price}$
             </Text>
           </Box>
@@ -118,18 +121,10 @@ export default function ProductDetails() {
           <Stack
             spacing={{ base: 4, sm: 6 }}
             direction={"column"}
-            divider={
-              <StackDivider
-                borderColor={useColorModeValue("gray.200", "gray.600")}
-              />
-            }
+            divider={<StackDivider borderColor={dividerColor} />}
           >
             <VStack spacing={{ base: 4, sm: 6 }}>
-              <Text
-                color={useColorModeValue("gray.500", "gray.400")}
-                fontSize={"2xl"}
-                fontWeight={"300"}
-              >
+              <Text color={textColor} fontSize={"2xl"} fontWeight={"300"}>
                 Description
               </Text>
               <Text fontSize={"lg"}>{product.description}</Text>
@@ -137,7 +132,7 @@ export default function ProductDetails() {
             <HStack alignItems={"center"}>
               <Text
                 fontSize={{ base: "16px", lg: "18px" }}
-                color={useColorModeValue("yellow.500", "yellow.300")}
+                color={boldYellow}
                 fontWeight={"500"}
                 textTransform={"uppercase"}
               >
@@ -149,7 +144,7 @@ export default function ProductDetails() {
             <HStack>
               <Text
                 fontSize={{ base: "16px", lg: "18px" }}
-                color={useColorModeValue("yellow.500", "yellow.300")}
+                color={boldYellow}
                 fontWeight={"500"}
                 textTransform={"uppercase"}
               >
@@ -161,7 +156,7 @@ export default function ProductDetails() {
             <HStack>
               <Text
                 fontSize={{ base: "16px", lg: "18px" }}
-                color={useColorModeValue("yellow.500", "yellow.300")}
+                color={boldYellow}
                 fontWeight={"500"}
                 textTransform={"uppercase"}
               >
@@ -190,8 +185,8 @@ export default function ProductDetails() {
               mt={8}
               size={"lg"}
               py={"7"}
-              bg={useColorModeValue("gray.900", "gray.50")}
-              color={useColorModeValue("white", "gray.900")}
+              bg={buttonColors.bg}
+              color={buttonColors.color}
               textTransform={"uppercase"}
               _hover={{
                 transform: "translateY(2px)",

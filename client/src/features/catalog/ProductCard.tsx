@@ -10,9 +10,10 @@ import {
   HStack,
   Text,
   IconButton,
-  Link,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import { FiEye, FiShoppingCart } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { addBasketItemAsync } from "../basket/basketSlice";
@@ -66,7 +67,9 @@ function ProductCard({ product }: Props) {
               <IconButton
                 icon={<FiShoppingCart />}
                 onClick={() =>
-                  dispatch(addBasketItemAsync({ productId: product.id, quantity: 1 }))
+                  dispatch(
+                    addBasketItemAsync({ productId: product.id, quantity: 1 })
+                  )
                 }
                 display={"flex"}
                 aria-label="Add to cart"
@@ -91,9 +94,13 @@ function ProductCard({ product }: Props) {
               color={"gray.800"}
               fontSize={"1.2em"}
             >
-              <Link href={`/catalog/${product.id}`} display={"flex"}>
+              <ChakraLink
+                as={Link}
+                to={`/catalog/${product.id}`}
+                display={"flex"}
+              >
                 <Icon as={FiEye} h={7} w={7} alignSelf={"center"} />
-              </Link>
+              </ChakraLink>
             </Tooltip>
           </HStack>
         </Box>
