@@ -12,6 +12,12 @@ import {
   SimpleGrid,
   StackDivider,
   useColorModeValue,
+  HStack,
+  NumberInput,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInputField,
+  NumberInputStepper,
 } from "@chakra-ui/react";
 import { MdLocalShipping } from "react-icons/md";
 import { useParams } from "react-router";
@@ -20,18 +26,48 @@ import { Product } from "../../app/models/product";
 import agent from "../../api/agent";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
+import { useStoreContext } from "../../app/context/StoreContext";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
+
+  const { basket, setBasket, removeItem } = useStoreContext();
+
   const [isLoading, setIsLoading] = useState(true);
 
+  const [quantity, setQuantity] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+
+  const item = basket?.items.find((i) => i.productId === product?.id);
+
+  function handleUpdateCart() {
+    setSubmitting(true);
+    if (!item || quantity > item.quantity) {
+      const updatedQuantity = item ? quantity - item.quantity : quantity;
+      agent.Basket.addItem(product?.id!, updatedQuantity)
+        .then((basket) => {
+          setBasket(basket);
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => setSubmitting(false));
+    } else {
+      const updatedQuantity = item.quantity - quantity;
+      agent.Basket.removeItem(product!.id, updatedQuantity)
+        .then(() => removeItem(product!.id, updatedQuantity))
+        .catch((error) => console.log("error", error))
+        .finally(() => setSubmitting(false));
+    }
+  }
+
   useEffect(() => {
+    if (item) setQuantity(item.quantity);
+
     agent.Catalog.details(parseInt(id!))
       .then((response) => setProduct(response))
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
-  }, [id]);
+  }, [id, item]);
 
   if (isLoading) return <LoadingComponent message="Loading Product..." />;
 
@@ -92,64 +128,75 @@ export default function ProductDetails() {
               </Text>
               <Text fontSize={"lg"}>{product.description}</Text>
             </VStack>
-            <Box>
+            <HStack alignItems={"center"}>
               <Text
                 fontSize={{ base: "16px", lg: "18px" }}
                 color={useColorModeValue("yellow.500", "yellow.300")}
                 fontWeight={"500"}
                 textTransform={"uppercase"}
-                mb={"4"}
               >
                 Type
               </Text>
 
               <Text fontSize={"lg"}>{product.type}</Text>
-            </Box>
-            <Box>
+            </HStack>
+            <HStack>
               <Text
                 fontSize={{ base: "16px", lg: "18px" }}
                 color={useColorModeValue("yellow.500", "yellow.300")}
                 fontWeight={"500"}
                 textTransform={"uppercase"}
-                mb={"4"}
               >
                 Brand
               </Text>
 
               <Text fontSize={"lg"}>{product.brand}</Text>
-            </Box>
-            <Box>
+            </HStack>
+            <HStack>
               <Text
                 fontSize={{ base: "16px", lg: "18px" }}
                 color={useColorModeValue("yellow.500", "yellow.300")}
                 fontWeight={"500"}
                 textTransform={"uppercase"}
-                mb={"4"}
               >
                 Quantity in stock
               </Text>
 
               <Text fontSize={"lg"}>{product.quantityInStock}</Text>
-            </Box>
+            </HStack>
           </Stack>
-
-          <Button
-            rounded={"none"}
-            w={"full"}
-            mt={8}
-            size={"lg"}
-            py={"7"}
-            bg={useColorModeValue("gray.900", "gray.50")}
-            color={useColorModeValue("white", "gray.900")}
-            textTransform={"uppercase"}
-            _hover={{
-              transform: "translateY(2px)",
-              boxShadow: "lg",
-            }}
-          >
-            Add to cart
-          </Button>
-
+          <HStack>
+            <NumberInput
+              allowMouseWheel
+              min={0}
+              defaultValue={item && item.quantity > 0 ? item.quantity : 1}
+              onChange={(value) => setQuantity(Number.parseInt(value))}
+            >
+              <NumberInputField placeholder="Quantity" />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <Button
+              rounded={"none"}
+              w={"full"}
+              mt={8}
+              size={"lg"}
+              py={"7"}
+              bg={useColorModeValue("gray.900", "gray.50")}
+              color={useColorModeValue("white", "gray.900")}
+              textTransform={"uppercase"}
+              _hover={{
+                transform: "translateY(2px)",
+                boxShadow: "lg",
+              }}
+              isLoading={submitting}
+              onClick={handleUpdateCart}
+            >
+              {item ? "Update cart" : "Add to cart"}
+            </Button>
+          </HStack>
           <Stack direction="row" alignItems="center" justifyContent={"center"}>
             <MdLocalShipping />
             <Text>2-3 business days delivery</Text>

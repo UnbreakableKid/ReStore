@@ -78,7 +78,7 @@ export default function BasketPage() {
                 <Td isNumeric>
                   <Box>
                     <IconButton
-                      aria-label="Delete"
+                      aria-label="Add item"
                       icon={<PlusSquareIcon color={"red.500"} />}
                       variant="ghost"
                       isLoading={
@@ -91,7 +91,7 @@ export default function BasketPage() {
                     />
                     {item.quantity}
                     <IconButton
-                      aria-label="Delete"
+                      aria-label="Remove item"
                       icon={<MinusIcon color={"red.500"} />}
                       variant="ghost"
                       isLoading={
@@ -111,7 +111,7 @@ export default function BasketPage() {
                 <Td isNumeric>{item.price * item.quantity} $</Td>
                 <Td>
                   <IconButton
-                    aria-label="Delete"
+                    aria-label="Delete item"
                     icon={<DeleteIcon color={"red.500"} />}
                     variant="ghost"
                     isLoading={
