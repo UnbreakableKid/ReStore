@@ -8,6 +8,8 @@ import theme from "./app/layout/theme";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { StoreProvider } from "./app/context/StoreContext";
+import { Provider } from "react-redux";
+import { store } from "./app/store/configureStore";
 
 export const history = createBrowserHistory();
 
@@ -16,9 +18,9 @@ ReactDOM.render(
     <ChakraProvider resetCSS theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <Router history={history}>
-        <StoreProvider>
+        <Provider store={store}>
           <App />
-        </StoreProvider>
+        </Provider>
       </Router>
     </ChakraProvider>
   </React.StrictMode>,

@@ -3,7 +3,7 @@ import {
   Flex,
   Avatar,
   HStack,
-  Link,
+  Link as ChakraLink,
   useColorModeValue,
   AvatarBadge,
   useColorMode,
@@ -14,14 +14,17 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { Link } from "react-router-dom";
 import { useStoreContext } from "../context/StoreContext";
+import { useAppSelector } from "../store/configureStore";
 
 const Links = ["Home", "Catalog", "About", "Contact"];
 
 const LinksUser = ["Login", "Register"];
 
 const NavLink = ({ children }: { children: string }) => (
-  <Link
+  <ChakraLink
+    as={Link}
     px={2}
     py={1}
     rounded={"md"}
@@ -29,16 +32,16 @@ const NavLink = ({ children }: { children: string }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={children === "Home" ? "/" : "/" + children.toLowerCase()}
+    to={children === "Home" ? "/" : "/" + children.toLowerCase()}
   >
     {children}
-  </Link>
+  </ChakraLink>
 );
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const { basket } = useStoreContext();
+  const { basket } = useAppSelector((state) => state.basket);
 
   const itemCount = basket?.items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -81,8 +84,8 @@ export default function Header() {
                   </Avatar>
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>
-                    <Link href="/basket">Basket</Link>
+                  <MenuItem as={Link} to="/basket">
+                    Basket
                   </MenuItem>
                   <MenuItem onClick={toggleColorMode}>
                     Toggle {colorMode === "light" ? "Dark" : "Light"} Theme

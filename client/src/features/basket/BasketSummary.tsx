@@ -10,10 +10,10 @@ import {
   Spacer,
   Text,
 } from "@chakra-ui/react";
-import { useStoreContext } from "../../app/context/StoreContext";
+import { useAppSelector } from "../../app/store/configureStore";
 
 export default function BasketSummary() {
-  const { basket } = useStoreContext();
+  const { basket } = useAppSelector((state) => state.basket);
 
   if (!basket) return <Heading as="h3">No basket</Heading>;
 

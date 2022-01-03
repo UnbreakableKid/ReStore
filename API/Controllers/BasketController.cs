@@ -89,7 +89,7 @@ namespace API.Controllers
             return basket;
         }
 
-        private BasketDto MapBasketToDto(Basket basket)
+        private static BasketDto MapBasketToDto(Basket basket)
         {
             return new BasketDto
             {
