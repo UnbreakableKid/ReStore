@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import { FiEye, FiShoppingCart } from "react-icons/fi";
 import agent from "../../api/agent";
+import { useStoreContext } from "../../app/context/StoreContext";
 import { Product } from "../../app/models/product";
 
 interface Props {
@@ -25,9 +26,12 @@ interface Props {
 function ProductCard({ product }: Props) {
   const [loading, setLoading] = useState(false);
 
+  const { setBasket } = useStoreContext();
+
   function handleAddItem(productId: number) {
     setLoading(true);
     agent.Basket.addItem(productId)
+      .then((basket) => setBasket(basket))
       .catch((error) => console.log("error", error))
       .finally(() => setLoading(false));
   }

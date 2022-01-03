@@ -14,6 +14,7 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { useStoreContext } from "../context/StoreContext";
 
 const Links = ["Home", "Catalog", "About", "Contact"];
 
@@ -36,6 +37,10 @@ const NavLink = ({ children }: { children: string }) => (
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
+
+  const { basket } = useStoreContext();
+
+  const itemCount = basket?.items.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <>
@@ -61,7 +66,6 @@ export default function Header() {
                         style={{ color: useColorModeValue("black", "white") }}
                       />
                     }
-                    
                     showBorder={false}
                     size={"md"}
                   >
@@ -70,7 +74,7 @@ export default function Header() {
                       border={"hidden"}
                       style={{ color: useColorModeValue("black", "white") }}
                     >
-                      5
+                      {itemCount}
                     </AvatarBadge>
                   </Avatar>
                 </MenuButton>
