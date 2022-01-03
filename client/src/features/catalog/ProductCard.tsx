@@ -4,14 +4,13 @@ import {
   Image,
   useColorModeValue,
   Icon,
-  chakra,
   Tooltip,
   GridItem,
   Center,
   HStack,
   Text,
-  Link,
   IconButton,
+  Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { FiEye, FiShoppingCart } from "react-icons/fi";

@@ -14,8 +14,10 @@ import {
   Th,
   Thead,
   Tr,
+  Button,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import agent from "../../api/agent";
 import { useStoreContext } from "../../app/context/StoreContext";
 import BasketSummary from "./BasketSummary";
@@ -131,6 +133,9 @@ export default function BasketPage() {
           </Tbody>
         </Table>
         <BasketSummary />
+        <Button as={Link} to={"/checkout"} w={"full"}>
+          Checkout
+        </Button>
       </Container>
     </>
   );

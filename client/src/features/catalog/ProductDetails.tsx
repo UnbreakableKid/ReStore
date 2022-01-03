@@ -101,11 +101,11 @@ export default function ProductDetails() {
               {product.name}
             </Heading>
             <Text
-              color={useColorModeValue("gray.900", "gray.400")}
-              fontWeight={300}
+              color={useColorModeValue("red", "red")}
+              fontWeight={400}
               fontSize={"2xl"}
             >
-              {product.price} USD
+              {product.price}$
             </Text>
           </Box>
 

@@ -4,7 +4,6 @@ import {
   Avatar,
   HStack,
   Link,
-  useDisclosure,
   useColorModeValue,
   AvatarBadge,
   useColorMode,
@@ -12,6 +11,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Image,
 } from "@chakra-ui/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useStoreContext } from "../context/StoreContext";
@@ -46,7 +46,9 @@ export default function Header() {
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
         <HStack h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <Box>Insert Logo</Box>
+          <Box>
+            <Image src={useColorModeValue("/logo.png", "/logo-light.png")} />
+          </Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
               <NavLink key={link}>{link}</NavLink>

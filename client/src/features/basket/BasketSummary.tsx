@@ -3,14 +3,11 @@ import {
   Container,
   Table,
   TableCaption,
-  Thead,
   Tr,
-  Th,
   Tbody,
   Td,
   Flex,
   Spacer,
-  useColorModeValue,
   Text,
 } from "@chakra-ui/react";
 import { useStoreContext } from "../../app/context/StoreContext";

@@ -1,5 +1,3 @@
-import { AddIcon } from "@chakra-ui/icons";
-import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import agent from "../../api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
