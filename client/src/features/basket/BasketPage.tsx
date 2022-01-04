@@ -60,21 +60,6 @@ export default function BasketPage() {
                 <Td isNumeric>
                   <Box>
                     <IconButton
-                      aria-label="Add item"
-                      icon={<PlusSquareIcon color={"red.500"} />}
-                      variant="ghost"
-                      isLoading={status === "pendingAddItem" + item.productId}
-                      onClick={() =>
-                        dispatch(
-                          addBasketItemAsync({
-                            productId: item.productId,
-                            quantity: 1,
-                          })
-                        )
-                      }
-                    />
-                    {item.quantity}
-                    <IconButton
                       aria-label="Remove item"
                       icon={<MinusIcon color={"red.500"} />}
                       variant="ghost"
@@ -87,6 +72,21 @@ export default function BasketPage() {
                             productId: item.productId,
                             quantity: 1,
                             name: "rem",
+                          })
+                        )
+                      }
+                    />
+                    {item.quantity}
+                    <IconButton
+                      aria-label="Add item"
+                      icon={<PlusSquareIcon color={"red.500"} />}
+                      variant="ghost"
+                      isLoading={status === "pendingAddItem" + item.productId}
+                      onClick={() =>
+                        dispatch(
+                          addBasketItemAsync({
+                            productId: item.productId,
+                            quantity: 1,
                           })
                         )
                       }

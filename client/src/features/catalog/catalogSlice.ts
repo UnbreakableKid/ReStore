@@ -31,11 +31,25 @@ export const fetchProductAsync = createAsyncThunk<Product, number>(
   }
 );
 
+export const fetchFilters = createAsyncThunk(
+  "catalog/fetchFilters",
+  async (_, thunkAPI) => {
+    try {
+      return agent.Catalog.fetchFilters();
+    } catch (error: any) {
+      return thunkAPI.fulfillWithValue({ error: error.data });
+    }
+  }
+);
+
 export const catalogSlice = createSlice({
   name: "catalog",
   initialState: productsAdapter.getInitialState({
     productsLoaded: false,
+    filtersLoaded: false,
     status: "idle",
+    brands: [],
+    types: [],
   }),
   reducers: {},
   extraReducers: (builder) => {
@@ -50,7 +64,6 @@ export const catalogSlice = createSlice({
     builder.addCase(fetchProductsAsync.rejected, (state) => {
       state.status = "idle";
     });
-
     builder.addCase(fetchProductAsync.pending, (state, action) => {
       state.status = "pendingFetchProduct";
     });
@@ -59,6 +72,21 @@ export const catalogSlice = createSlice({
       state.status = "idle";
     });
     builder.addCase(fetchProductAsync.rejected, (state) => {
+      state.status = "idle";
+    });
+
+    builder.addCase(fetchFilters.pending, (state, action) => {
+      state.status = "pendingFetchFilters";
+    });
+
+    builder.addCase(fetchFilters.fulfilled, (state, action) => {
+      state.brands = action.payload.brands;
+      state.types = action.payload.types;
+      state.filtersLoaded = true;
+      state.status = "idle";
+    });
+
+    builder.addCase(fetchFilters.rejected, (state) => {
       state.status = "idle";
     });
   },
