@@ -10,7 +10,7 @@ import {
   Link as CLink,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 
 import { Formik } from "formik";
@@ -23,11 +23,16 @@ YupPassword(Yup);
 
 export default function Login() {
   const history = useHistory();
+  const location = useLocation<any>();
   const dispatch = useAppDispatch();
 
   const onSubmit = async (values: FieldValues) => {
-    await dispatch(signInUser(values));
-    history.push("/catalog");
+    try {
+      await dispatch(signInUser(values));
+      history.push(location?.state?.from?.pathname || "/catalog");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const initialValues = {
@@ -55,7 +60,7 @@ export default function Login() {
           //wtf?
           onSubmit={handleSubmit as any}
         >
-          <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+          <Stack spacing={8} mx={"auto"} minW={"lg"} py={12} px={6}>
             <Stack align={"center"}>
               <Heading fontSize={"4xl"}>Sign in to your account</Heading>
               {/* <Text fontSize={"lg"} color={"gray.600"}>

@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { history } from "..";
 import { PaginatedResponse } from "../app/models/pagination";
+import { store } from "../app/store/configureStore";
 
 axios.defaults.baseURL = "http://localhost:5034/api/";
 axios.defaults.withCredentials = true;
@@ -10,6 +11,16 @@ const responseBody = (response: AxiosResponse) => response.data;
 //delay request for testing purposes only
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
+axios.interceptors.request.use((config) => {
+  const token = store.getState().account.user?.token;
+
+  if (token) {
+    config.headers!.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 axios.interceptors.response.use(
   async (response) => {
     await sleep();
@@ -18,7 +29,6 @@ axios.interceptors.response.use(
       response.data = new PaginatedResponse(
         response.data,
         JSON.parse(pagination)
-        
       );
     }
     return response;
@@ -91,10 +101,10 @@ const Basket = {
 };
 
 const Account = {
-  login: (values:any) => requests.post('account/login',values),
-  register: (values:any) => requests.post('account/register',values),
-  currentUser: () => requests.get('account/register'),
-}
+  login: (values: any) => requests.post("account/login", values),
+  register: (values: any) => requests.post("account/register", values),
+  currentUser: () => requests.get("account/currentUser"),
+};
 
 const agent = {
   Catalog,

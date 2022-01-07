@@ -15,7 +15,9 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../store/configureStore";
+import { signOut } from "../../features/account/accountSlice";
+import { clearBasket } from "../../features/basket/basketSlice";
+import { useAppDispatch, useAppSelector } from "../store/configureStore";
 
 const Links = ["Home", "Catalog", "About", "Contact"];
 
@@ -42,6 +44,10 @@ export default function Header() {
 
   const { basket } = useAppSelector((state) => state.basket);
 
+  const { user } = useAppSelector((state) => state.account);
+
+  const dispatch = useAppDispatch();
+
   const itemCount = basket?.items.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -58,9 +64,9 @@ export default function Header() {
           </HStack>
           <Flex alignItems={"center"}>
             <HStack as={"nav"} display={{ base: "none", md: "flex" }}>
-              {LinksUser.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
+              {!user &&
+                LinksUser.map((link) => <NavLink key={link}>{link}</NavLink>)}
+
               <Menu placement="bottom">
                 <MenuButton>
                   <Avatar
@@ -89,6 +95,16 @@ export default function Header() {
                   <MenuItem onClick={toggleColorMode}>
                     Toggle {colorMode === "light" ? "Dark" : "Light"} Theme
                   </MenuItem>
+                  {user && (
+                    <MenuItem
+                      onClick={() => {
+                        dispatch(signOut());
+                        dispatch(clearBasket());
+                      }}
+                    >
+                      Sign Out
+                    </MenuItem>
+                  )}
                 </MenuList>
               </Menu>
             </HStack>

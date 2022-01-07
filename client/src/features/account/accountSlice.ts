@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { FieldValues } from "react-hook-form";
+import { history } from "../..";
 import agent from "../../api/agent";
 import { User } from "../../app/models/user";
+import { setBasket } from "../basket/basketSlice";
 
 interface AccountState {
   user: User | null;
@@ -15,7 +17,10 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
   "account/signInUser",
   async (data, thunkAPI) => {
     try {
-      const user = await agent.Account.login(data);
+      const userDto = await agent.Account.login(data);
+      //set everything else to user
+      const { basket, ...user } = userDto;
+      if (basket) thunkAPI.dispatch(setBasket(basket));
       localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (error: any) {
@@ -24,24 +29,47 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
   }
 );
 
-export const fetchCurrentUser = createAsyncThunk<User, {}>(
+export const fetchCurrentUser = createAsyncThunk<User>(
   "account/fetchCurrentUser",
   async (_, thunkAPI) => {
+    thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem("user")!)));
     try {
-      const user = await agent.Account.currentUser();
+      const userDto = await agent.Account.currentUser();
+      const { basket, ...user } = userDto;
+      if (basket) thunkAPI.dispatch(setBasket(basket));
       localStorage.setItem("user", user);
       return user;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
     }
+  },
+  {
+    condition: (state) => {
+      if (!localStorage.getItem("user")) return false;
+    },
   }
 );
 
 export const accountSlice = createSlice({
   name: "account",
   initialState,
-  reducers: {},
+  reducers: {
+    signOut: (state) => {
+      state.user = null;
+      localStorage.removeItem("user");
+      history.push("/");
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
   extraReducers: (builder) => {
+    builder.addCase(fetchCurrentUser.rejected, (state, action) => {
+      state.user = null;
+      localStorage.removeItem("user");
+      history.push("/");
+    });
+
     builder.addMatcher(
       isAnyOf(signInUser.fulfilled, fetchCurrentUser.fulfilled),
       (state, action) => {
@@ -51,8 +79,10 @@ export const accountSlice = createSlice({
     builder.addMatcher(
       isAnyOf(signInUser.rejected, fetchCurrentUser.rejected),
       (state, action) => {
-        console.log(action.payload);
+        throw action.payload;
       }
     );
   },
 });
+
+export const { signOut, setUser } = accountSlice.actions;
