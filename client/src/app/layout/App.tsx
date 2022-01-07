@@ -49,7 +49,7 @@ function App() {
         <Route path="/contact" component={ContactPage} />
         <Route path="/server-error" component={ServerError} />
         <Route path="/basket" component={BasketPage} />
-        <PrivateRoute path="/checkout" component={CheckoutPage} />
+        <Route path="/checkout" component={CheckoutPage} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route component={NotFound} />
