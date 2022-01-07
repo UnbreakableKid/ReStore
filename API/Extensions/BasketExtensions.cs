@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions
 {
@@ -28,6 +29,11 @@ namespace API.Extensions
                     Type = item.Product.Type
                 }).ToList()
             };
+        }
+
+        public static IQueryable<Basket> RetrieveBasket(this IQueryable<Basket> query, string buyerId)
+        {
+            return query.Include(i => i.Items).ThenInclude(p => p.Product).Where(x => x.BuyerId == buyerId);
         }
 
     }
