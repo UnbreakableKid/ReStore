@@ -10,23 +10,28 @@ import {
   Link as CLink,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 
 import { Formik } from "formik";
 import { InputControl, SubmitButton } from "formik-chakra-ui";
-
 import YupPassword from "yup-password";
-import agent from "../../api/agent";
+import { useAppDispatch } from "../../app/store/configureStore";
+import { signInUser } from "./accountSlice";
+import { FieldValues } from "react-hook-form";
 YupPassword(Yup);
 
 export default function Login() {
-  const onSubmit = (values: any) => {
-    agent.Account.login(values);
+  const history = useHistory();
+  const dispatch = useAppDispatch();
+
+  const onSubmit = async (values: FieldValues) => {
+    await dispatch(signInUser(values));
+    history.push("/catalog");
   };
 
   const initialValues = {
-    email: "",
+    username: "",
     password: "",
   };
 
