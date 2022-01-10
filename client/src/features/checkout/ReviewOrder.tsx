@@ -1,19 +1,12 @@
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
-  Flex,
   FormControl,
   FormLabel,
-  Heading,
   HStack,
-  Text,
   Input,
   InputGroup,
-  InputRightElement,
-  Link,
   Stack,
-  useColorModeValue,
+  Checkbox,
 } from "@chakra-ui/react";
 import React from "react";
 
@@ -21,63 +14,67 @@ interface ContentsProps {}
 
 const ReviewOrder: React.FC<ContentsProps> = ({}) => {
   return (
-    <Flex
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
-      <Box
-        rounded={"lg"}
-        bg={useColorModeValue("white", "gray.800")}
-        boxShadow={"lg"}
-        p={8}
-      >
-        <Stack spacing={4}>
-          <HStack>
-            <Box>
-              <FormControl id="firstName" isRequired>
-                <FormLabel>First Name</FormLabel>
-                <Input type="text" />
-              </FormControl>
-            </Box>
-            <Box>
-              <FormControl id="lastName">
-                <FormLabel>Last Name</FormLabel>
-                <Input type="text" />
-              </FormControl>
-            </Box>
-          </HStack>
-          <FormControl id="email" isRequired>
-            <FormLabel>Email address</FormLabel>
-            <Input type="email" />
-          </FormControl>
-          <FormControl id="password" isRequired>
-            <FormLabel>Password</FormLabel>
-            <InputGroup>
-              <Input />
-            </InputGroup>
-          </FormControl>
-          <Stack spacing={10} pt={2}>
-            <Button
-              loadingText="Submitting"
-              size="lg"
-              bg={"blue.400"}
-              color={"white"}
-              _hover={{
-                bg: "blue.500",
-              }}
-            >
-              Sign up
-            </Button>
-          </Stack>
-          <Stack pt={6}>
-            <Text align={"center"}>
-              Already a user? <Link color={"blue.400"}>Login</Link>
-            </Text>
-          </Stack>
-        </Stack>
-      </Box>
-    </Flex>
+    <Box rounded={"lg"} p={8} w={"fit-content"}>
+      <Stack spacing={4}>
+        <HStack>
+          <Box>
+            <FormControl id="firstName" isRequired>
+              <FormLabel>First Name</FormLabel>
+              <Input type="text" />
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl id="lastName">
+              <FormLabel>Last Name</FormLabel>
+              <Input type="text" />
+            </FormControl>
+          </Box>
+        </HStack>
+        <FormControl id="address1" isRequired>
+          <FormLabel>AddressLine1</FormLabel>
+          <InputGroup>
+            <Input />
+          </InputGroup>
+        </FormControl>
+        <FormControl id="address2" isRequired>
+          <FormLabel>AddressLine2</FormLabel>
+          <InputGroup>
+            <Input />
+          </InputGroup>
+        </FormControl>
+        <HStack>
+          <Box>
+            <FormControl id="city">
+              <FormLabel>City</FormLabel>
+              <Input type="text" />
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl id="state">
+              <FormLabel>State</FormLabel>
+              <Input type="text" />
+            </FormControl>
+          </Box>
+        </HStack>
+        <HStack>
+          <Box>
+            <FormControl id="zip">
+              <FormLabel>Zip / Postal</FormLabel>
+              <Input type="text" />
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl id="country" isRequired>
+              <FormLabel>Country</FormLabel>
+              <Input type="text" />
+            </FormControl>
+          </Box>
+        </HStack>
+        <Checkbox name="saveAddress" value="yes" label="Store this address">
+          Use address for shipping?
+        </Checkbox>
+      </Stack>
+    </Box>
   );
 };
 

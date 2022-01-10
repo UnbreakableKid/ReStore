@@ -4,17 +4,23 @@ import {
   Heading,
   Button,
   useColorModeValue,
+  Container,
 } from "@chakra-ui/react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
-import { FiCheckCircle } from "react-icons/fi";
+import {
+  FiCheckCircle,
+  FiClipboard,
+  FiDollarSign,
+  FiUser,
+} from "react-icons/fi";
 import ShippingAddress from "./Contents";
 import PaymentDetails from "./PaymentDetails";
 import ReviewOrder from "./ReviewOrder";
 
 const steps = [
-  { label: "Step 1", description: "Step 1 description" },
-  { label: "Step 2", description: "Step 2 description" },
-  { label: "Step 3", description: "Step 3 description" },
+  { label: "Shipping Address", icon: FiUser },
+  { label: "Review Order", icon: FiClipboard },
+  { label: "Pay", icon: FiDollarSign },
 ];
 
 const pages = (index: number) => {
@@ -44,9 +50,9 @@ export default function CheckoutPage() {
         bg={useColorModeValue("gray.50", "gray.900")}
       >
         <Steps checkIcon={FiCheckCircle} activeStep={activeStep}>
-          {steps.map(({ label }, index) => (
-            <Step label={label} key={label} mb={10}>
-              {pages(index)}
+          {steps.map(({ label, icon }, index) => (
+            <Step label={label} key={label} icon={icon} mb={10}>
+              <Container>{pages(index)}</Container>
             </Step>
           ))}
         </Steps>

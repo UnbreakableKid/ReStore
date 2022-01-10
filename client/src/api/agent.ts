@@ -14,9 +14,7 @@ const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 axios.interceptors.request.use((config) => {
   const token = store.getState().account.user?.token;
 
-  if (token) {
-    config.headers!.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers!.Authorization = `Bearer ${token}`;
 
   return config;
 });
