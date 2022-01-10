@@ -1,32 +1,15 @@
-import {
-  Box,
-  Flex,
-  FormControl,
-  FormLabel,
-  HStack,
-  Input,
-  InputGroup,
-  Stack,
-  Container,
-  Checkbox,
-  Button,
-} from "@chakra-ui/react";
+import { Box, HStack, Stack, Checkbox } from "@chakra-ui/react";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
+import AppCheckbox from "../../app/components/AppCheckbox";
 import AppTextInput from "../../app/components/AppTextInput";
 
 interface ContentsProps {}
 
 const ShippingAddress: React.FC<ContentsProps> = ({}) => {
-  const { control, handleSubmit } = useForm();
+  const { control } = useFormContext();
   return (
-    <Box
-      rounded={"lg"}
-      p={8}
-      w={"fit-content"}
-      as="form"
-      onSubmit={handleSubmit((data) => console.log(data))}
-    >
+    <Box rounded={"lg"} p={8} w={"fit-content"}>
       <Stack spacing={4}>
         <AppTextInput
           control={control}
@@ -82,10 +65,11 @@ const ShippingAddress: React.FC<ContentsProps> = ({}) => {
             />
           </Box>
         </HStack>
-        <Checkbox name="saveAddress" value="yes" label="Store this address">
-          Use address for shipping?
-        </Checkbox>
-        <Button type="submit">Submit</Button>
+        <AppCheckbox
+          label="Save this as the default address"
+          name="saveAddress"
+          control={control}
+        />
       </Stack>
     </Box>
   );
