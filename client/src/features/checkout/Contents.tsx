@@ -1,12 +1,12 @@
-import { Box, HStack, Stack, Checkbox } from "@chakra-ui/react";
+import { Box, HStack, Stack } from "@chakra-ui/react";
 import React from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import AppCheckbox from "../../app/components/AppCheckbox";
 import AppTextInput from "../../app/components/AppTextInput";
 
 interface ContentsProps {}
 
-const ShippingAddress: React.FC<ContentsProps> = ({}) => {
+const ShippingAddress: React.FC<ContentsProps> = () => {
   const { control } = useFormContext();
   return (
     <Box rounded={"lg"} p={8} w={"fit-content"}>
@@ -19,13 +19,13 @@ const ShippingAddress: React.FC<ContentsProps> = ({}) => {
         />
         <AppTextInput
           control={control}
-          name="address1"
+          name="addressLine1"
           label="Address Line 1"
           isRequired
         />
         <AppTextInput
           control={control}
-          name="address2"
+          name="addressLine2"
           label="Address Line 2"
           isRequired
         />
@@ -51,7 +51,7 @@ const ShippingAddress: React.FC<ContentsProps> = ({}) => {
           <Box>
             <AppTextInput
               control={control}
-              name="zip"
+              name="zipCode"
               label="Zip / Postal"
               isRequired
             />

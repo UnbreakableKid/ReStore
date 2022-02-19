@@ -8,7 +8,11 @@ interface AppCheckboxProps extends UseControllerProps {
 }
 
 const AppCheckbox: React.FC<AppCheckboxProps> = (props: AppCheckboxProps) => {
-  const { fieldState, field } = useController({ ...props, defaultValue: "" });
+  const { fieldState, field } = useController({
+    ...props,
+    defaultValue: false,
+  });
+
   return (
     <FormControl
       id={props.label.toLowerCase().replace(" ", "")}
