@@ -23,6 +23,8 @@ namespace API.Entities.OrderAggregate
 
         public OrderStatus Status { get; set; }
 
+        public string PaymentIntentId { get; set; }
+
         public long GetTotal()
         {
             return Subtotal + DeliveryFee;
