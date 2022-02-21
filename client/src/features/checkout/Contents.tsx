@@ -7,7 +7,7 @@ import AppTextInput from "../../app/components/AppTextInput";
 interface ContentsProps {}
 
 const ShippingAddress: React.FC<ContentsProps> = () => {
-  const { control } = useFormContext();
+  const { control, formState } = useFormContext();
   return (
     <Box rounded={"lg"} p={8} w={"fit-content"}>
       <Stack spacing={4}>
@@ -69,6 +69,7 @@ const ShippingAddress: React.FC<ContentsProps> = () => {
           label="Save this as the default address"
           name="saveAddress"
           control={control}
+          disabled={!formState.isDirty}
         />
       </Stack>
     </Box>

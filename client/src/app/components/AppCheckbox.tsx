@@ -5,10 +5,11 @@ import { useController, UseControllerProps } from "react-hook-form";
 interface AppCheckboxProps extends UseControllerProps {
   label: string;
   isRequired?: boolean;
+  disabled?: boolean;
 }
 
 const AppCheckbox: React.FC<AppCheckboxProps> = (props: AppCheckboxProps) => {
-  const { fieldState, field } = useController({
+  const { field } = useController({
     ...props,
     defaultValue: false,
   });
@@ -19,7 +20,7 @@ const AppCheckbox: React.FC<AppCheckboxProps> = (props: AppCheckboxProps) => {
       isRequired={props.isRequired}
     >
       <FormLabel>{props.label}</FormLabel>
-      <Checkbox checked={field.value} {...field} />
+      <Checkbox checked={field.value} {...field} disabled={props.disabled} />
     </FormControl>
   );
 };

@@ -20,7 +20,7 @@ import ReviewOrder from "./ReviewOrder";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { checkoutValidationSchema } from "./checkoutValidation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import agent from "../../api/agent";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { clearBasket } from "../basket/basketSlice";
@@ -69,6 +69,18 @@ export default function CheckoutPage() {
     mode: "all",
     resolver: yupResolver(currentValidationSchema),
   });
+
+  useEffect(() => {
+    agent.Account.fetchAddress().then((address) => {
+      if (address) {
+        methods.reset({
+          ...methods.getValues(),
+          ...address,
+          saveAddress: false,
+        });
+      }
+    });
+  }, [methods]);
 
   const pages = (index: number) => {
     switch (index) {

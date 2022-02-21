@@ -12,18 +12,23 @@ import {
 } from "@chakra-ui/react";
 import { useAppSelector } from "../../app/store/configureStore";
 
-export default function BasketSummary() {
+interface Props {
+  subtotal?: number;
+}
+
+export default function BasketSummary({ subtotal }: Props) {
   const { basket } = useAppSelector((state) => state.basket);
 
   if (!basket) return <Heading as="h3">No basket</Heading>;
 
-  const subTotal = basket.items.reduce(
-    (acc, item) => acc + item.quantity * item.price,
-    0
-  );
-  const deliveryFee = subTotal > 100 ? 0 : 10;
+  if (subtotal === undefined)
+    subtotal = basket.items.reduce(
+      (acc, item) => acc + item.quantity * item.price,
+      0
+    );
+  const deliveryFee = subtotal > 100 ? 0 : 10;
 
-  const totalPrice = subTotal + deliveryFee;
+  const totalPrice = subtotal + deliveryFee;
 
   return (
     <Flex alignItems={"end"}>
@@ -37,7 +42,7 @@ export default function BasketSummary() {
               <Td>
                 <Text>Subtotal</Text>
               </Td>
-              <Td isNumeric>{subTotal}$</Td>
+              <Td isNumeric>{subtotal}$</Td>
             </Tr>
             <Tr>
               <Td>

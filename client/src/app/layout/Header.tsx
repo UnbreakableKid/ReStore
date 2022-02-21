@@ -92,6 +92,9 @@ export default function Header() {
                   <MenuItem as={Link} to="/basket">
                     Basket
                   </MenuItem>
+                  <MenuItem as={Link} to="/orders">
+                    My Orders
+                  </MenuItem>
                   <MenuItem onClick={toggleColorMode}>
                     Toggle {colorMode === "light" ? "Dark" : "Light"} Theme
                   </MenuItem>
