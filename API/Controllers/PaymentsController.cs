@@ -37,8 +37,8 @@ namespace API.Controllers
                 Detail = "Payment intent could not be created"
             });
 
-            basket.PaymentIntentId ??= intent.Id;
-            basket.ClientSecret ??= intent.ClientSecret;
+            basket.PaymentIntentId = string.IsNullOrEmpty(basket.PaymentIntentId) ? intent.Id : basket.PaymentIntentId;
+            basket.ClientSecret = string.IsNullOrEmpty(basket.ClientSecret) ? intent.ClientSecret : basket.ClientSecret;
             _context.Update(basket);
 
             var result = await _context.SaveChangesAsync() > 0;
